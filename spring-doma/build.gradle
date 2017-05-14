@@ -1,0 +1,66 @@
+buildscript {
+	ext {
+		springBootVersion = '1.5.3.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+plugins {
+	id 'java'
+	id 'groovy'
+	id "org.springframework.boot" version "1.5.3.RELEASE"
+}
+
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+// for Doma settings
+processResources.destinationDir = compileJava.destinationDir
+compileJava.dependsOn processResources
+
+if (!hasProperty('mainClass')) {
+    ext.mainClass = 'com.example.DemoApplication.class'
+}
+
+springBoot {
+    executable = true
+}
+
+bootRun {
+	jvmArgs '-XX:TieredStopAtLevel=1', '-Xverify:none'
+}
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile('org.springframework.boot:spring-boot-starter-data-rest')
+	compile('org.seasar.doma.boot:doma-spring-boot-starter:1.1.0')
+	runtime('org.springframework.boot:spring-boot-devtools')
+	// db
+	compile('org.springframework.boot:spring-boot-starter-jdbc')
+    runtime('org.flywaydb:flyway-core')
+	runtime('com.h2database:h2')
+	// swagger
+	compile('io.springfox:springfox-core:2.6.1')
+	compile('io.springfox:springfox-swagger2:2.6.1')
+	compile('io.springfox:springfox-swagger-ui:2.6.1')
+	// utilities
+	compile('org.apache.commons:commons-lang3:3.5')
+
+	// test
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile('org.spockframework:spock-core:1.1-groovy-2.4')
+	testCompile('org.spockframework:spock-spring:1.1-groovy-2.4')
+	testCompile('org.dbunit:dbunit:2.5.3')
+	testCompile('com.athaydes:spock-reports:1.3.0' ){
+        transitive = false
+    }
+}
